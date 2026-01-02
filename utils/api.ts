@@ -1,4 +1,5 @@
 import { dataConfigType } from '@/types/config';
+import { PendingSale } from '@/types/pendingSales';
 import { Sale } from '@/types/sales';
 import axios from 'axios';
 
@@ -18,9 +19,32 @@ export async function postSale(payload:Sale) {
     throw new Error('No se puede registrar una venta vacia')
   }
   try {
-    const req = await axios.post('/api/sale', payload);
+    const req = await axios.post('/api/sales', payload);
     return req.data;
   } catch(error) {
-    throw new Error('Error con la api /sale')
+    throw new Error('Error con la api /sales')
+  }
+}
+
+export async function getPendings() {
+  try {
+    const req = await axios.get('/api/sales/pendings');
+    const pendings: PendingSale[] = req.data.pendings;
+    return pendings;
+  } catch (error) {
+    throw new Error('Error con la api /pendings');
+  }
+}
+
+export async function updateSale(sale: PendingSale) {
+  console.log('Entre a api.ts');
+  if (!sale) {
+    throw new Error('Se debe seleccionar una venta para actualizar');
+  }
+  try {
+    const req = await axios.post('/api/sales/pendings', sale);
+    return req.data;
+  } catch(error) {
+    throw new Error('Error con /sales/pendings');
   }
 }

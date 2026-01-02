@@ -48,7 +48,7 @@ export function SaleForm() {
         month: new Date().toLocaleString('es-ES', { month: 'long' })
       };
 
-      const sale = await postSale(payload);
+      await postSale(payload);
       
       if (values.isStock) {
         dataConfig!.stock = dataConfig!.stock.filter((item) => item.id !== values.id)
