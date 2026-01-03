@@ -5,8 +5,10 @@ import axios from 'axios';
 
 export async function getConfig() {
   try {
+    console.log('in get config')
     const req = await axios.get('/api/config');
     const config: dataConfigType = req.data.config;
+    console.log('before returning getconfig')
     return config;
 
   } catch (error) {
@@ -28,7 +30,7 @@ export async function postSale(payload:Sale) {
 
 export async function getPendings() {
   try {
-    const req = await axios.get('/api/sales/pendings');
+    const req = await axios.get(`/api/sales/pendings`);
     const pendings: PendingSale[] = req.data.pendings;
     return pendings;
   } catch (error) {
@@ -37,13 +39,12 @@ export async function getPendings() {
 }
 
 export async function updateSale(sale: PendingSale) {
-  console.log('Entre a api.ts');
   if (!sale) {
     throw new Error('Se debe seleccionar una venta para actualizar');
   }
   try {
-    const req = await axios.post('/api/sales/pendings', sale);
-    return req.data;
+    const req = await axios.put('/api/sales/pendings', sale);
+    return req.data.sale;
   } catch(error) {
     throw new Error('Error con /sales/pendings');
   }

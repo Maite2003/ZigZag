@@ -2,7 +2,7 @@
 
 import { dataConfigType } from '@/types/config';
 import { Sale, saleSchema } from '@/types/sales';
-import { getConfig, postSale } from '@/utils/api';
+import { postSale } from '@/utils/api';
 import { ErrorMessage, Field, Form, Formik, useFormikContext } from 'formik';
 import { useEffect, useState } from 'react';
 
@@ -21,22 +21,9 @@ const PriceAutoFiller = ({ dataConfig }: { dataConfig: dataConfigType }) => {
   return null;
 };
 
-export function SaleForm() {
-  const [dataConfig, setDataConfig] = useState<dataConfigType | null>(null);
+export function SaleForm({ config } : { config: dataConfigType}) {
+  const [dataConfig, setDataConfig] = useState<dataConfigType>(config);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-
-  useEffect(() => {
-    const fetchConfig = async () => {
-    try {
-      const config: dataConfigType = await getConfig();
-      setDataConfig(config);
-    } catch (error) {
-      console.error("Error cargando configuración:", error);
-    }
-    };
-
-    fetchConfig();
-  }, []);
 
   const handleOnSubmit = async (values: any, { resetForm }: any) => {
     try {
@@ -64,10 +51,6 @@ export function SaleForm() {
       setTimeout(() => setMessage(null), 3000);
     }
   }   
-
-  if (!dataConfig) {
-    return <div className="p-8 text-center rounded-2xl" style={{ color: '#616d48' }}>Consultando precios de ZigZag...</div>;
-  }
 
   return (
     
@@ -108,25 +91,25 @@ export function SaleForm() {
       >
         {({ values, setFieldValue, errors }) => {
           const hasErrors = Object.keys(errors).length > 0;
-          console.log("Errores actuales: ", errors)
-          console.log("Valores actuales", values)
+          const isStatusPendiente = values.status === 'PENDIENTE';
+          console.log(values);
           return (
             <Form className="space-y-4">
               <PriceAutoFiller dataConfig={dataConfig} />
 
               <div>
                 <label className="block text-sm font-semibold mb-1" style={{ color: '#616d48' }}>Fecha</label>
-                <Field name="timestamp" type="date" className="w-full p-2 border-2 rounded-md" style={{ borderColor: '#fa9b71', color: '#616d48' }} />
+                <Field name="timestamp" type="date" className="w-full p-2 border-2 rounded-md bg-white" style={{ borderColor: '#fa9b71', color: '#616d48' }} />
                 <ErrorMessage name="timestamp" component="div" className="text-xs mt-1" />
               </div>
 
-              <div className="flex items-center justify-between p-3 rounded-lg border-2 shadow-sm" style={{ backgroundColor: '#fff5f0', borderColor: '#fa9b71' }}>
+              <div className="flex items-center justify-between p-3 rounded-lg border-2 shadow-sm bg-white" style={{ borderColor: '#fa9b71' }}>
                 <span className="font-medium" style={{ color: '#616d48' }}>¿Es de Stock?</span>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input 
                     type="checkbox" 
                     checked={values.isStock}
-                    className="sr-only peer" 
+                    className="sr-only peer " 
                     onChange={(e) => {
                       setFieldValue('isStock', e.target.checked);
                       setFieldValue('model', '');
@@ -140,7 +123,7 @@ export function SaleForm() {
 
               <div>
                 <label className="block text-sm font-semibold mb-1" style={{ color: '#616d48' }}>Cliente</label>
-                <Field name="buyer" className="w-full p-2 border-2 rounded-md" placeholder="Nombre del cliente" style={{ borderColor: '#fa9b71', color: '#616d48' }} />
+                <Field name="buyer" className="w-full p-2 border-2 rounded-md bg-white" placeholder="Nombre del cliente" style={{ borderColor: '#fa9b71', color: '#616d48' }} />
                 <style>{`input[name="buyer"]::placeholder { color: #fa9b71; opacity: 1; }`}</style>
                 <ErrorMessage name="buyer" component="div" className="text-xs mt-1" />
               </div>
@@ -148,7 +131,7 @@ export function SaleForm() {
               <div className="grid grid-cols-1 gap-4">
                 {values.isStock ? (
                   <div>
-                    <label className="block text-sm font-semibold mb-1" style={{ color: '#616d48' }}>Producto disponible</label>
+                    <label className="block text-sm font-semibold mb-1 " style={{ color: '#616d48' }}>Producto disponible</label>
                     <Field 
                       name="stockId"
                       as="select" 
@@ -204,7 +187,18 @@ export function SaleForm() {
                 </div>
                 <div>
                   <label className="block text-sm font-semibold mb-1" style={{ color: '#616d48' }}>Estado</label>
-                  <Field as="select" name="status" className="w-full p-2 border-2 rounded-md bg-white" style={{ borderColor: '#fa9b71', color: '#616d48' }}>
+                  <Field 
+                    as="select" 
+                    name="status" 
+                    className="w-full p-2 border-2 rounded-md bg-white" 
+                    style={{ borderColor: '#fa9b71', color: '#616d48' }}
+                    onChange={(e : any) => {
+                      const selected = e.target.value;
+                      if (selected == 'PENDIENTE') {
+                        setFieldValue('paymentMethod', '');
+                      }
+                      setFieldValue('status', selected);
+                    }}>
                     <option value="PAGO">Pago</option>
                     <option value="PENDIENTE">Pendiente</option>
                   </Field>
@@ -213,8 +207,14 @@ export function SaleForm() {
 
             
               <div>
-                <label className="block text-sm font-semibold mb-1" style={{ color: '#616d48' }}>Método de pago</label>
-                <Field as="select" name="paymentMethod" className="w-full p-2 border-2 rounded-md bg-white" style={{ borderColor: '#fa9b71', color: '#616d48' }}>
+                <label className="block text-sm font-semibold mb-1 " style={{ color: '#616d48' }}>Método de pago</label>
+                <Field 
+                    as="select" 
+                    name="paymentMethod" 
+                    className={`w-full p-2 border-2 rounded-md  ${isStatusPendiente ? 'bg-gray-100 cursor-not-allowed' : ''}`}
+                    style={{ backgroundColor: `${isStatusPendiente ? '#fff5f0' : 'white'}`, borderColor: '#fa9b71', color: '#616d48' }}
+                    disabled={isStatusPendiente}
+                  >
                   <option value="EFECTIVO">Efectivo</option>
                   <option value="TRANSFERENCIA">Transferencia</option>
                 </Field>
@@ -223,7 +223,7 @@ export function SaleForm() {
 
               <div>
                 <label className="block text-sm font-semibold mb-1" style={{ color: '#616d48' }}>Notas adicionales</label>
-                <Field as="textarea" name="notes" rows={2} className="w-full p-2 border-2 rounded-md" style={{ borderColor: '#fa9b71', color: '#616d48' }} placeholder="Detalles de costura o deudas..." />
+                <Field as="textarea" name="notes" rows={2} className="w-full p-2 border-2 rounded-md bg-white" style={{ borderColor: '#fa9b71', color: '#616d48' }} placeholder="Detalles de costura o deudas..." />
                 <style>{`textarea[name="notes"]::placeholder { color: #fa9b71; opacity: 1; }`}</style>
               </div>
 

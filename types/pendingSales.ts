@@ -7,6 +7,7 @@ export interface PendingSale {
   row: string,
   client: string,
   date: string,
+  price: string,
   paymentMethod?: string,
 }
 
@@ -18,5 +19,6 @@ export const pendingSaleSchema = Yup.object().shape({
   row: Yup.string().required(),
   client: Yup.string().required(),
   paymentMethod: Yup.string()
-  .oneOf(['EFECTIVO', 'TRANSFERENCIA']),
+  .oneOf(['EFECTIVO', 'TRANSFERENCIA'])
+  .required(),
 });

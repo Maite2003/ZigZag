@@ -2,8 +2,9 @@ import { NextResponse } from "next/server";
 import axios from 'axios'
 
 export async function GET() {
+  console.log('in api');
   const req = await axios.get('http://localhost:5678/webhook/32305e74-4494-4131-b77e-0f87da09d82b');
-  
+  console.log('after calling n8n')
   if (req.status !== 200 || !req.data) {
     return NextResponse.json({ error: "Problemas con la api "}, { status: 500 })
   }
