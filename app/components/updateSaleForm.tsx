@@ -60,8 +60,7 @@ export function UpdateSaleForm({initialPendingSales}: { initialPendingSales: Pen
         validationSchema={pendingSaleSchema}
         onSubmit={handleUpdatePayment}
       >
-        {({ values, setFieldValue, errors }) => {
-          const hasErrors = Object.keys(errors).length > 0;
+        {({ setFieldValue, isValid, dirty }) => {
           return (
             <Form className="space-y-4">
                   <div>
@@ -121,26 +120,26 @@ export function UpdateSaleForm({initialPendingSales}: { initialPendingSales: Pen
 
               <button 
                 type="submit" 
-                disabled={hasErrors}
+                disabled={!isValid || !dirty}
                 className="w-full text-white font-bold py-3 rounded-xl transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed" 
-                style={{ backgroundColor: hasErrors ? '#999999' : '#616d48' }} 
+                style={{ backgroundColor: !isValid ? '#999999' : '#616d48' }} 
                 onMouseEnter={(e) => { 
-                  if (!hasErrors) {
+                  if (isValid) {
                     (e.currentTarget as any).style.backgroundColor = '#fa9b71'; 
                     (e.currentTarget as any).style.boxShadow = '0 0 20px rgba(250, 155, 113, 0.5)'; 
                   }
                 }} 
                 onMouseLeave={(e) => { 
-                  if (!hasErrors) {
+                  if (isValid) {
                     (e.currentTarget as any).style.backgroundColor = '#616d48'; 
                     (e.currentTarget as any).style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1)'; 
                   }
                 }} 
                 onMouseDown={(e) => { 
-                  if (!hasErrors) (e.currentTarget as any).style.transform = 'scale(0.98)'; 
+                  if (isValid) (e.currentTarget as any).style.transform = 'scale(0.98)'; 
                 }} 
                 onMouseUp={(e) => { 
-                  if (!hasErrors) (e.currentTarget as any).style.transform = 'scale(1)'; 
+                  if (isValid) (e.currentTarget as any).style.transform = 'scale(1)'; 
                 }}
               >
                 Guardar

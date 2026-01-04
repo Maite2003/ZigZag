@@ -1,12 +1,12 @@
 "use client"
 
-import { dataConfigType } from '@/types/config';
+import { DataConfigType } from '@/types/config';
 import { Sale, saleSchema } from '@/types/sales';
 import { postSale } from '@/utils/api';
 import { ErrorMessage, Field, Form, Formik, useFormikContext } from 'formik';
 import { useEffect, useState } from 'react';
 
-const PriceAutoFiller = ({ dataConfig }: { dataConfig: dataConfigType }) => {
+const PriceAutoFiller = ({ dataConfig }: { dataConfig: DataConfigType }) => {
   const { values, setFieldValue } = useFormikContext<any>();
 
   useEffect(() => {
@@ -21,8 +21,8 @@ const PriceAutoFiller = ({ dataConfig }: { dataConfig: dataConfigType }) => {
   return null;
 };
 
-export function SaleForm({ config } : { config: dataConfigType}) {
-  const [dataConfig, setDataConfig] = useState<dataConfigType>(config);
+export function SaleForm({ config } : { config: DataConfigType}) {
+  const [dataConfig, setDataConfig] = useState<DataConfigType>(config);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   const handleOnSubmit = async (values: any, { resetForm }: any) => {
@@ -89,8 +89,7 @@ export function SaleForm({ config } : { config: dataConfigType}) {
         validationSchema={saleSchema}
         onSubmit={handleOnSubmit}
       >
-        {({ values, setFieldValue, errors }) => {
-          const hasErrors = Object.keys(errors).length > 0;
+        {({ values, setFieldValue, isValid, dirty }) => {
           const isStatusPendiente = values.status === 'PENDIENTE';
           console.log(values);
           return (
@@ -229,26 +228,26 @@ export function SaleForm({ config } : { config: dataConfigType}) {
 
               <button 
                 type="submit" 
-                disabled={hasErrors}
+                disabled={!isValid || !dirty}
                 className="w-full text-white font-bold py-3 rounded-xl transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed" 
-                style={{ backgroundColor: hasErrors ? '#999999' : '#616d48' }} 
+                style={{ backgroundColor: !isValid ? '#999999' : '#616d48' }} 
                 onMouseEnter={(e) => { 
-                  if (!hasErrors) {
+                  if (isValid) {
                     (e.currentTarget as any).style.backgroundColor = '#fa9b71'; 
                     (e.currentTarget as any).style.boxShadow = '0 0 20px rgba(250, 155, 113, 0.5)'; 
                   }
                 }} 
                 onMouseLeave={(e) => { 
-                  if (!hasErrors) {
+                  if (isValid) {
                     (e.currentTarget as any).style.backgroundColor = '#616d48'; 
                     (e.currentTarget as any).style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1)'; 
                   }
                 }} 
                 onMouseDown={(e) => { 
-                  if (!hasErrors) (e.currentTarget as any).style.transform = 'scale(0.98)'; 
+                  if (isValid) (e.currentTarget as any).style.transform = 'scale(0.98)'; 
                 }} 
                 onMouseUp={(e) => { 
-                  if (!hasErrors) (e.currentTarget as any).style.transform = 'scale(1)'; 
+                  if (isValid) (e.currentTarget as any).style.transform = 'scale(1)'; 
                 }}
               >
                 Guardar

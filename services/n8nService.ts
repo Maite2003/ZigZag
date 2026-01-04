@@ -1,6 +1,7 @@
-import { dataConfigType } from '@/types/config';
+import { DataConfigType } from '@/types/config';
 import { PendingSale } from '@/types/pendingSales';
 import { Sale } from '@/types/sales';
+import { Stock } from '@/types/stock';
 import axios from 'axios';
 
 const URLS = {
@@ -8,6 +9,7 @@ const URLS = {
   GET_PENDINGS: "http://localhost:5678/webhook/b88ec717-d639-4c0c-aec4-98f7a3e3bec2",
   UPDATE_SALE: "http://localhost:5678/webhook/6c10d42d-9225-4c3f-ad62-210fc7933f20",
   POST_SALE: "http://localhost:5678/webhook/d6d05ef7-a4a2-49b4-9474-e575724bb4aa",
+  POST_STOCK: "http://localhost:5678/webhook/dd8babcc-9854-4f03-81c7-74059adc7503",
 }
 
 export async function getConfig() {
@@ -16,7 +18,10 @@ export async function getConfig() {
     if (req.status !== 200) {
       throw new Error('Error con la api /config');
     }
-    const config: dataConfigType = req.data;
+    const config: DataConfigType = req.data;
+    const rawPrices = config.pricePerModel || {};
+    const modelsList = [...Object.keys(rawPrices), "Otro"];
+    config["models"] = modelsList;
     return config;
 
   } catch (error) {
@@ -31,7 +36,7 @@ export async function postSale(payload:Sale) {
   try {
     const req = await axios.post(URLS.POST_SALE, payload);
     if (req.status !== 200) {
-      throw new Error('Error con la api /sales');
+      throw new Error('Error creando la nueva venta');
     }
     return req.data;
   } catch(error) {
@@ -64,5 +69,20 @@ export async function updateSale(sale: PendingSale) {
     return req.data;
   } catch(error) {
     throw new Error('Error con /sales/pendings');
+  }
+}
+
+export async function postStock(stock: Stock) {
+  if (!stock) {
+    throw new Error('No se puede registrar un producto vacio');
+  }
+  try {
+    const req = await axios.post(URLS.POST_STOCK, stock);
+    if (req.status !== 200) {
+      throw new Error('Error creando el nuevo producto');
+    }
+    return req.data;
+  } catch (error) {
+    throw new Error('Error con la api /stock');
   }
 }

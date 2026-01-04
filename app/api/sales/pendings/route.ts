@@ -20,7 +20,6 @@ export async function PUT(
 ) {
   try {
     const sale = await request.json();
-    console.log(sale)
     if (!sale) {
       return NextResponse.json({ error: 'Falta venta para actualizar '}, { status: 400 });
     }

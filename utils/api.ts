@@ -1,4 +1,4 @@
-import { dataConfigType } from '@/types/config';
+import { DataConfigType } from '@/types/config';
 import { PendingSale } from '@/types/pendingSales';
 import { Sale } from '@/types/sales';
 import axios from 'axios';
@@ -7,7 +7,7 @@ export async function getConfig() {
   try {
     console.log('in get config')
     const req = await axios.get('/api/config');
-    const config: dataConfigType = req.data.config;
+    const config: DataConfigType = req.data.config;
     console.log('before returning getconfig')
     return config;
 

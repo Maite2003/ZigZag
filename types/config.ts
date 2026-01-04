@@ -1,12 +1,12 @@
-interface config_stock {
+interface ConfigStock {
   id: string,
   model: string,
   fabric: string
 }
 
-export interface dataConfigType {
+export interface DataConfigType {
   models: string[],
   fabrics: string [],
-  stock: config_stock[],
+  stock: ConfigStock[],
   pricePerModel: Record<string, number>
 }

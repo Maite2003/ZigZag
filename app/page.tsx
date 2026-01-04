@@ -1,14 +1,11 @@
 import { getConfig } from "@/services/n8nService";
 import { SaleForm } from "./components/saleForm";
-import { dataConfigType } from "@/types/config";
+import { DataConfigType } from "@/types/config";
 
 export default async function Home() {
-  let config: dataConfigType | undefined;
+  let config: DataConfigType | undefined;
     try {
       config = await getConfig();
-      const rawPrices = config.pricePerModel || {};
-      const modelsList = [...Object.keys(rawPrices), "Otro"];
-      config["models"] = modelsList;
     } catch (e) {
       console.error(e);
     }
