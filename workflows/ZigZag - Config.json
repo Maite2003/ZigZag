@@ -1,0 +1,537 @@
+{
+  "name": "ZigZag - Config",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "32305e74-4494-4131-b77e-0f87da09d82b",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -880,
+        32
+      ],
+      "id": "cf73070f-efc3-4dfb-9523-9ea330db08e1",
+      "name": "Webhook",
+      "webhookId": "32305e74-4494-4131-b77e-0f87da09d82b"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "documentId": {
+          "__rl": true,
+          "value": "1WonT0HEFkY-fNyO2fwy0qvqFWvnQtbPm4jYJO4JXwjE",
+          "mode": "list",
+          "cachedResultName": "ZigZag 2026",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WonT0HEFkY-fNyO2fwy0qvqFWvnQtbPm4jYJO4JXwjE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 860695741,
+          "mode": "list",
+          "cachedResultName": "Configuracion",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WonT0HEFkY-fNyO2fwy0qvqFWvnQtbPm4jYJO4JXwjE/edit#gid=860695741"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -672,
+        32
+      ],
+      "id": "6d093c2c-1f87-4695-8be3-699d01873945",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleApi": {
+          "id": "Arlwv81Uo97ZC6Md",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "documentId": {
+          "__rl": true,
+          "value": "1WonT0HEFkY-fNyO2fwy0qvqFWvnQtbPm4jYJO4JXwjE",
+          "mode": "list",
+          "cachedResultName": "ZigZag 2026",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WonT0HEFkY-fNyO2fwy0qvqFWvnQtbPm4jYJO4JXwjE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 806224905,
+          "mode": "list",
+          "cachedResultName": "Precio Final",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WonT0HEFkY-fNyO2fwy0qvqFWvnQtbPm4jYJO4JXwjE/edit#gid=806224905"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -672,
+        256
+      ],
+      "id": "7c634862-1b39-4d57-917c-f2c1fe59517e",
+      "name": "Get row(s) in sheet1",
+      "executeOnce": true,
+      "credentials": {
+        "googleApi": {
+          "id": "Arlwv81Uo97ZC6Md",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8e701f7a-8ad8-4d71-8c49-2455028c95a6",
+              "name": "name",
+              "value": "={{ $json.col_3 }}",
+              "type": "string"
+            },
+            {
+              "id": "099d9290-8535-48bc-a3c5-db950eac11d4",
+              "name": "price",
+              "value": "={{ $json.col_11 }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -464,
+        256
+      ],
+      "id": "f548709f-51c1-4657-9809-e9993c27cd04",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "072d3274-a79f-4f2e-9631-041ac7c1183c",
+              "leftValue": "={{ $json.Telas }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        -464,
+        32
+      ],
+      "id": "b4a238a9-9caa-4490-b9c9-cc8793f01e27",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -352,
+        736
+      ],
+      "id": "94dd8171-3359-4a4e-8e6b-de8580a84993",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "const prices = $('PricePerModel').all();\n\nconst prices_entries = prices\n  .filter(item => item.json.name) // Only keep the ones that are not empty\n  .map(item => [item.json.name, item.json.price]); \n\nconst pricePerModel = Object.fromEntries(prices_entries);\n\nconst fabrics = $('Fabrics').first().json.Telas;\n\nconst stockAvailable = $('Stock').all();\n\nconst stock = stockAvailable\n  .map(item => ({'id': item.json.id, \n                'model': item.json.model, \n                'fabric': item.json.fabric})\n  ); \n\n//const stock = Object.fromEntries(stock_entries);\n\nreturn [\n  {\n    json: {\n      pricePerModel: pricePerModel,\n      fabrics: fabrics,\n      stock: stock\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -656,
+        736
+      ],
+      "id": "69a30902-9743-478e-ab38-8d702153578d",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "documentId": {
+          "__rl": true,
+          "value": "1WonT0HEFkY-fNyO2fwy0qvqFWvnQtbPm4jYJO4JXwjE",
+          "mode": "list",
+          "cachedResultName": "ZigZag 2026",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WonT0HEFkY-fNyO2fwy0qvqFWvnQtbPm4jYJO4JXwjE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 391777352,
+          "mode": "list",
+          "cachedResultName": "DISPONIBLE",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WonT0HEFkY-fNyO2fwy0qvqFWvnQtbPm4jYJO4JXwjE/edit#gid=391777352"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -672,
+        496
+      ],
+      "id": "f16ac8b8-0729-4f8e-a860-86e2cf37a1ce",
+      "name": "Get row(s) in sheet2",
+      "executeOnce": true,
+      "credentials": {
+        "googleApi": {
+          "id": "Arlwv81Uo97ZC6Md",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "a7167bb4-20ac-4c8c-9663-6c18cc725064",
+              "leftValue": "={{ $json.Producto }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        -464,
+        496
+      ],
+      "id": "1e3b9cf2-108f-4667-8439-bacf4f4b1783",
+      "name": "Filter2"
+    },
+    {
+      "parameters": {
+        "content": "# Fabrics\nGet one per row, filter the empty ones"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "96632113-9384-4afd-99ce-335d281e41f0",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "# Models\nGet only model names and their prices. Filter headers and empty ones"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -16,
+        224
+      ],
+      "typeVersion": 1,
+      "id": "9f21a2af-a313-420b-a3ce-aab01298ad95",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "# Stock\nGet stock model, id and fabric\n"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -48,
+        464
+      ],
+      "typeVersion": 1,
+      "id": "4da3a23f-7b0e-46d9-8551-ab8aea754a60",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "Telas"
+            }
+          ]
+        },
+        "options": {
+          "keepMissing": false
+        }
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        32
+      ],
+      "id": "a1cb5c38-3582-4c99-8f7e-df73664a9db9",
+      "name": "Fabrics"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "708acd07-bcef-4a4c-afd7-c736ce58b27f",
+              "leftValue": "={{ $json.name }}",
+              "rightValue": "Productos",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            },
+            {
+              "id": "ed22cdee-1846-4bb3-9164-20df232d9264",
+              "leftValue": "={{ $json.name }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        -256,
+        256
+      ],
+      "id": "5376fc25-c562-4fb2-a5f9-891cef1d6f8e",
+      "name": "PricePerModel"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b04f6f21-2bf7-438b-b589-28d4e6ba72ac",
+              "name": "model",
+              "value": "={{ $json.Producto }}",
+              "type": "string"
+            },
+            {
+              "id": "07191ab3-850b-4404-b121-3fc9c6446120",
+              "name": "fabric",
+              "value": "={{ $json.Tela }}",
+              "type": "string"
+            },
+            {
+              "id": "8dda65e7-4c99-4806-a778-35b71fe27604",
+              "name": "id",
+              "value": "={{ $json.row_number }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -256,
+        496
+      ],
+      "id": "df38755a-0749-445a-8e8a-477bc6f919df",
+      "name": "Stock"
+    },
+    {
+      "parameters": {
+        "content": "# Config\nGet fabrics, models, prices and stock available"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1200,
+        32
+      ],
+      "typeVersion": 1,
+      "id": "09ca2699-8f19-4297-a056-46ed4f834858",
+      "name": "Sticky Note3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "PricePerModel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Fabrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet2": {
+      "main": [
+        [
+          {
+            "node": "Filter2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter2": {
+      "main": [
+        [
+          {
+            "node": "Stock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fabrics": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PricePerModel": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Stock": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "268b79c7-dd3d-4082-af7b-b8c567a2ae69",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "090f2a0f1b98b928f216e93c73225715993b9308f79f014801ecbcdcf413cefd"
+  },
+  "id": "_ZByscGhm1Cgm_eTBxfXl",
+  "tags": []
+}

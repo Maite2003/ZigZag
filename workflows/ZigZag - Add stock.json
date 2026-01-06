@@ -1,0 +1,310 @@
+{
+  "name": "ZigZag - Add stock",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "dd8babcc-9854-4f03-81c7-74059adc7503",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "fcf510f2-141d-43ae-b094-79ca9208dcf9",
+      "name": "Webhook",
+      "webhookId": "dd8babcc-9854-4f03-81c7-74059adc7503"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "documentId": {
+          "__rl": true,
+          "value": "1WonT0HEFkY-fNyO2fwy0qvqFWvnQtbPm4jYJO4JXwjE",
+          "mode": "list",
+          "cachedResultName": "ZigZag 2026",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WonT0HEFkY-fNyO2fwy0qvqFWvnQtbPm4jYJO4JXwjE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 391777352,
+          "mode": "list",
+          "cachedResultName": "DISPONIBLE",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WonT0HEFkY-fNyO2fwy0qvqFWvnQtbPm4jYJO4JXwjE/edit#gid=391777352"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        0
+      ],
+      "id": "e1a49912-bb62-4ed6-89a5-560ee177f979",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleApi": {
+          "id": "Arlwv81Uo97ZC6Md",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "95231841-b9ee-4637-9d53-b139302a84aa",
+              "leftValue": "={{ $json.Producto }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        416,
+        0
+      ],
+      "id": "e542f1c0-fda0-47af-b40f-fcca15010196",
+      "name": "Filter"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        624,
+        0
+      ],
+      "id": "802215e5-0019-4540-bd68-5c5db7bdc08b",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1040,
+        0
+      ],
+      "id": "b9228a35-e6ff-41c2-af40-6de4bacbf11e",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1WonT0HEFkY-fNyO2fwy0qvqFWvnQtbPm4jYJO4JXwjE",
+          "mode": "list",
+          "cachedResultName": "ZigZag 2026",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WonT0HEFkY-fNyO2fwy0qvqFWvnQtbPm4jYJO4JXwjE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 391777352,
+          "mode": "list",
+          "cachedResultName": "DISPONIBLE",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WonT0HEFkY-fNyO2fwy0qvqFWvnQtbPm4jYJO4JXwjE/edit#gid=391777352"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Producto": "={{ $('Webhook').item.json.body.model }}",
+            "Hecho": "={{ $('Webhook').item.json.body.timestamp.toDateTime().format('dd/MM/yyyy') }}",
+            "Tela": "={{ $('Webhook').item.json.body.fabric }}",
+            "row_number": "={{ $json.row_number }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "#",
+              "displayName": "#",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Producto",
+              "displayName": "Producto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Hecho",
+              "displayName": "Hecho",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Tela",
+              "displayName": "Tela",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ig",
+              "displayName": "ig",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "nube",
+              "displayName": "nube",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ML",
+              "displayName": "ML",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        832,
+        0
+      ],
+      "id": "79af5681-86c4-4237-b786-1ae2ca61f3b2",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleApi": {
+          "id": "Arlwv81Uo97ZC6Md",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "0955b028-61db-4dfc-b868-c4306ec5082a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "090f2a0f1b98b928f216e93c73225715993b9308f79f014801ecbcdcf413cefd"
+  },
+  "id": "7s87azR3W90og3zhdn9k2",
+  "tags": []
+}
