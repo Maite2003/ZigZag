@@ -9,8 +9,10 @@ import { useState } from "react";
 export function UpdateSaleForm({initialPendingSales}: { initialPendingSales: PendingSale[] }) {
   const [pendings, setPendings] = useState<PendingSale[]>(initialPendingSales);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleUpdatePayment = async (values: any, { resetForm }: any) => {
+    setIsLoading(true);
     try {
       await updateSale(values);
 
@@ -22,9 +24,10 @@ export function UpdateSaleForm({initialPendingSales}: { initialPendingSales: Pen
       setMessage({ type: 'success', text: 'Pago actualizado exitosamente' });
       setTimeout(() => setMessage(null), 3000);
     } catch (error) {
-      console.error("Error actualizando pago:", error);
       setMessage({ type: 'error', text: 'Error al actualizar el pago' });
       setTimeout(() => setMessage(null), 3000);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -120,7 +123,7 @@ export function UpdateSaleForm({initialPendingSales}: { initialPendingSales: Pen
 
               <button 
                 type="submit" 
-                disabled={!isValid || !dirty}
+                disabled={!isValid || !dirty || isLoading}
                 className="w-full text-white font-bold py-3 rounded-xl transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed" 
                 style={{ backgroundColor: !isValid ? '#999999' : '#616d48' }} 
                 onMouseEnter={(e) => { 
@@ -142,7 +145,16 @@ export function UpdateSaleForm({initialPendingSales}: { initialPendingSales: Pen
                   if (isValid) (e.currentTarget as any).style.transform = 'scale(1)'; 
                 }}
               >
-                Guardar
+                <div className="flex items-center justify-center gap-2">
+                  {isLoading && (
+                    <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  )}
+                  
+                  {isLoading ? 'Actualizando...' : 'Actualizar'}
+                </div>
               </button>
             </Form>
           )

@@ -2,6 +2,8 @@ import { getConfig } from "@/services/n8nService";
 import { SaleForm } from "./components/saleForm";
 import { DataConfigType } from "@/types/config";
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   const config: DataConfigType = await getConfig();
   

@@ -3,6 +3,8 @@ import { DataConfigType } from '@/types/config'
 import { getConfig } from '@/services/n8nService'
 import {CreateStockForm} from '../components/createStockForm';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AgregarStock() {
   const config: DataConfigType = await getConfig();
 

@@ -24,8 +24,10 @@ const PriceAutoFiller = ({ dataConfig }: { dataConfig: DataConfigType }) => {
 export function SaleForm({ config } : { config: DataConfigType}) {
   const [dataConfig, setDataConfig] = useState<DataConfigType>(config);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleOnSubmit = async (values: any, { resetForm }: any) => {
+    setIsLoading(true);
     try {
       const payload = {
         ...values,
@@ -46,9 +48,10 @@ export function SaleForm({ config } : { config: DataConfigType}) {
       setMessage({ type: 'success', text: 'Venta registrada exitosamente' });
       setTimeout(() => setMessage(null), 3000);
     } catch (error) {
-      console.error("Error registrando venta:", error);
       setMessage({ type: 'error', text: 'Error al registrar la venta' });
       setTimeout(() => setMessage(null), 3000);
+    } finally {
+      setIsLoading(false);
     }
   }   
 
@@ -227,7 +230,7 @@ export function SaleForm({ config } : { config: DataConfigType}) {
 
               <button 
                 type="submit" 
-                disabled={!isValid || !dirty}
+                disabled={!isValid || !dirty || isLoading}
                 className="w-full text-white font-bold py-3 rounded-xl transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed" 
                 style={{ backgroundColor: !isValid ? '#999999' : '#616d48' }} 
                 onMouseEnter={(e) => { 
@@ -249,7 +252,17 @@ export function SaleForm({ config } : { config: DataConfigType}) {
                   if (isValid) (e.currentTarget as any).style.transform = 'scale(1)'; 
                 }}
               >
-                Guardar
+                <div className="flex items-center justify-center gap-2">
+                  {isLoading && (
+                    // Este es el SPINNER (Un SVG girando)
+                    <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  )}
+                  
+                  {isLoading ? 'Procesando...' : 'Comprar'}
+                </div>
               </button>
             </Form>
           );
