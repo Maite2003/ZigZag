@@ -100,9 +100,9 @@ export function CreateStockForm({ config }: { config: DataConfigType }) {
 
                 <button 
                   type="submit" 
-                  disabled={!isValid || !dirty}
+                  disabled={!isValid || !dirty || isLoading}
                   className="w-full text-white font-bold py-3 rounded-xl transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed" 
-                  style={{ backgroundColor: !isValid ? '#999999' : '#616d48' }} 
+                  style={{ backgroundColor: !isValid ? '#999999' : '#616d48', cursor: (!isValid || !dirty || isLoading) ? 'not-allowed' : 'pointer' }} 
                   onMouseEnter={(e) => { 
                     if (isValid) {
                       (e.currentTarget as any).style.backgroundColor = '#fa9b71'; 
