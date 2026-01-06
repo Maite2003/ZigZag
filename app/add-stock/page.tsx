@@ -4,16 +4,7 @@ import { getConfig } from '@/services/n8nService'
 import {CreateStockForm} from '../components/createStockForm';
 
 export default async function AgregarStock() {
-  let config: DataConfigType | undefined;
-  try {
-      config = await getConfig()
-    } catch (error) {
-      console.error("Error cargando configuración:", error)
-    }
-
-  if (!config) {
-    return <div className="p-8 text-center" style={{ color: '#616d48' }}>Por favor actualizar el excel.</div>
-  }
+  const config: DataConfigType = await getConfig();
 
   return (
     <div className="flex items-center justify-center font-sans pt-16" style={{ backgroundColor: '#ffccb6', minHeight: 'calc(100vh - 64px)' }}>

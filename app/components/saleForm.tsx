@@ -91,7 +91,6 @@ export function SaleForm({ config } : { config: DataConfigType}) {
       >
         {({ values, setFieldValue, isValid, dirty }) => {
           const isStatusPendiente = values.status === 'PENDIENTE';
-          console.log(values);
           return (
             <Form className="space-y-4">
               <PriceAutoFiller dataConfig={dataConfig} />

@@ -15,7 +15,8 @@ export async function POST(
 
     return NextResponse.json({ sale: newSale }, { status: 201 });
   } catch(error) {
-    return NextResponse.json({ error: "Error con la api /sale"}, { status: 500 });
+    const message = error instanceof Error ? error.message : 'Error desconocido';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 

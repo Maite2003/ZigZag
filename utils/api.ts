@@ -5,10 +5,8 @@ import axios from 'axios';
 
 export async function getConfig() {
   try {
-    console.log('in get config')
     const req = await axios.get('/api/config');
     const config: DataConfigType = req.data.config;
-    console.log('before returning getconfig')
     return config;
 
   } catch (error) {

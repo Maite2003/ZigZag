@@ -1,15 +1,10 @@
 
-import { getPendings } from '@/services/n8nService';
+import axios from 'axios';
 import { UpdateSaleForm } from '../components/updateSaleForm'
 import { PendingSale } from '@/types/pendingSales';
 
 export default async function UpdatePaymentPage() {
-  let initialSales: PendingSale[] = [];
-  try {
-    initialSales = await getPendings(); 
-  } catch (e) {
-    console.error(e);
-  }
+  const initialSales: PendingSale[] = await axios.get('/api/sales/pendings') 
 
   if (!initialSales || initialSales.length === 0) {
     return <div className="p-8 text-center rounded-2xl" style={{ color: '#616d48' }}>No hay ventas sin pagar</div>;

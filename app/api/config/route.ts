@@ -1,16 +1,19 @@
 import { NextResponse } from "next/server";
-import axios from 'axios'
+import { getConfig } from "@/services/n8nService";
 
 export async function GET() {
-  console.log('in api');
-  const req = await axios.get('http://localhost:5678/webhook/32305e74-4494-4131-b77e-0f87da09d82b');
-  console.log('after calling n8n')
-  if (req.status !== 200 || !req.data) {
-    return NextResponse.json({ error: "Problemas con la api "}, { status: 500 })
+  try {
+    const config = await getConfig()
+    if (!config) {
+      return NextResponse.json({ error: "Problemas con la api "}, { status: 500 })
+    }
+
+    const rawPrices = config.pricePerModel || {};
+    const modelsList = [...Object.keys(rawPrices), "Otro"];
+
+    return NextResponse.json({ config: { ...config, models: modelsList }}, { status: 200 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Error desconocido';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
-
-  const rawPrices = req.data.pricePerModel || {};
-  const modelsList = [...Object.keys(rawPrices), "Otro"];
-
-  return NextResponse.json({ config: { ...(req.data), models: modelsList }}, { status: 200 });
 }

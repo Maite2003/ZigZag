@@ -12,6 +12,7 @@ export async function POST(request:Request) {
     const product = await postStock(newStock);
     return NextResponse.json({ product }, { status: 201 });
   } catch(error) {
-    return NextResponse.json({ error: 'Error con la api /stock '}, { status: 500 })
+    const message = error instanceof Error ? error.message : 'Error desconocido';
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }

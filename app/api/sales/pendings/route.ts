@@ -1,19 +1,20 @@
-import { updateSale } from "@/services/n8nService";
+import { getPendings, updateSale } from "@/services/n8nService";
 import { NextResponse } from "next/server";
 
-// export async function GET() {
-//   try {
-//     const req = await axios.get('http://localhost:5678/webhook/b88ec717-d639-4c0c-aec4-98f7a3e3bec2');
-//     if (req.status !== 200 || !req.data) {
-//       return NextResponse.json({ error: 'Error consiguiendo los pagos pendientes'}, { status: 500 });
-//     }
+export async function GET() {
+  try {
+    const pendings = await getPendings();
+    if (!pendings) {
+      return NextResponse.json({ error: 'Error consiguiendo los pagos pendientes'}, { status: 500 });
+    }
 
-//     return NextResponse.json({ pendings: req.data.pendings}, { status: 200 });
+    return NextResponse.json({ pendings }, { status: 200 });
 
-//   } catch (error) {
-//     return NextResponse.json({ error: 'Error consiguiendo los pagos pendientes'}, { status: 500 });
-//   }
-// }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Error desconocido';
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}
 
 export async function PUT(
   request: Request
@@ -27,6 +28,7 @@ export async function PUT(
 
     return NextResponse.json({ sale: updatedSale }, { status: 200 });
   } catch(error) {
-    return NextResponse.json({ error: 'Error actualizando venta' }, { status: 500 });
+    const message = error instanceof Error ? error.message : 'Error desconocido';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
