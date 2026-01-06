@@ -1,20 +1,5 @@
-import { getPendings, updateSale } from "@/services/n8nService";
+import { updateSale } from "@/services/n8nService";
 import { NextResponse } from "next/server";
-
-export async function GET() {
-  try {
-    const pendings = await getPendings();
-    if (!pendings) {
-      return NextResponse.json({ error: 'Error consiguiendo los pagos pendientes'}, { status: 500 });
-    }
-
-    return NextResponse.json({ pendings }, { status: 200 });
-
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Error desconocido';
-    return NextResponse.json({ error: message }, { status: 500 });
-  }
-}
 
 export async function PUT(
   request: Request

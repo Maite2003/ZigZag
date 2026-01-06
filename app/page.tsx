@@ -1,9 +1,9 @@
+import { getConfig } from "@/services/n8nService";
 import { SaleForm } from "./components/saleForm";
 import { DataConfigType } from "@/types/config";
-import axios from 'axios';
 
 export default async function Home() {
-  const config: DataConfigType = await axios.get('/api/config');
+  const config: DataConfigType = await getConfig();
   
   return (
     <div className="flex items-center justify-center font-sans pt-16" style={{ backgroundColor: '#ffccb6', minHeight: 'calc(100vh - 64px)' }}>
