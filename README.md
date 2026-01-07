@@ -43,3 +43,42 @@
   - n8n (Self-hosted workflow automation)
   - Docker
   - AWS EC2 (Hosting the n8n instance)
+
+```mermaid
+graph LR
+    subgraph Client [📱 Client Side]
+        User((👤 User))
+    end
+
+    subgraph Vercel [☁️ Vercel Cloud]
+        NextJS[🖥️ Next.js UI]
+        API[🛡️ API Routes / Proxy]
+    end
+
+    subgraph AWS [☁️ AWS EC2]
+        Docker[🐳 Docker Container]
+        n8n[⚡ n8n Orchestrator]
+    end
+
+    subgraph Google [☁️ Google Cloud]
+        Sheets[(📗 Google Sheets)]
+    end
+
+    %% Flujo de datos
+    User -->|Interacts| NextJS
+    NextJS -->|Secure Fetch| API
+    API -->|Webhook POST| n8n
+    Docker -.-> n8n
+    n8n -->|Validate & Append| Sheets
+    Sheets -.->|Return Data| n8n
+    n8n -.->|Response JSON| API
+    API -.->|Update UI| NextJS
+
+    style Client fill:#fff,stroke:#333,stroke-width:2px
+    style Vercel fill:#000,stroke:#fff,stroke-width:2px,color:#fff
+    style AWS fill:#FF9900,stroke:#232F3E,stroke-width:2px,color:#fff
+    style Google fill:#34A853,stroke:#fff,stroke-width:2px,color:#fff
+```
+
+
+  
