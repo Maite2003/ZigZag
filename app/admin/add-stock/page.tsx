@@ -1,7 +1,7 @@
 
 import { DataConfigType } from '@/types/config'
 import { getConfig } from '@/services/n8nService'
-import {CreateStockForm} from '../components/createStockForm';
+import { CreateStockForm } from '@/app/components/CreateStockForm';
 
 export const dynamic = 'force-dynamic';
 

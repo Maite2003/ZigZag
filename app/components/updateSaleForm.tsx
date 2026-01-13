@@ -84,7 +84,7 @@ export function UpdateSaleForm({initialPendingSales}: { initialPendingSales: Pen
                         setFieldValue('id', sale.id);
                       }}
                     >
-                      <option value="">-- Seleccionar --</option>
+                      <option value="" disabled hidden>-- Seleccionar --</option>
                       {pendings && pendings.map(item => (
                         <option key={item.id} value={item.id}>{item.client} - {item.product}</option>
                       ))}
@@ -101,7 +101,7 @@ export function UpdateSaleForm({initialPendingSales}: { initialPendingSales: Pen
                     className={`w-full p-2 border-2 rounded-md bg-white`}
                     style={{ borderColor: '#fa9b71', color: '#616d48' }}
                   >
-                    <option value="">-- Seleccionar --</option>
+                    <option value="" disabled hidden>-- Seleccionar --</option>
                     <option value="EFECTIVO">Efectivo</option>
                     <option value="TRANSFERENCIA">Transferencia</option>
                   </Field>
@@ -125,7 +125,7 @@ export function UpdateSaleForm({initialPendingSales}: { initialPendingSales: Pen
                 type="submit" 
                 disabled={!isValid || !dirty || isLoading}
                 className="w-full text-white font-bold py-3 rounded-xl transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed" 
-                style={{ backgroundColor: !isValid ? '#999999' : '#616d48', cursor: (!isValid || !dirty || isLoading) ? 'not-allowed' : 'pointer' }} 
+                style={{ backgroundColor: '#616d48', cursor: (!isValid || !dirty || isLoading) ? 'not-allowed' : 'pointer' }} 
                 onMouseEnter={(e) => { 
                   if (isValid) {
                     (e.currentTarget as any).style.backgroundColor = '#fa9b71'; 

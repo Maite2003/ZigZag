@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Nav } from "./components/nav";
+import { PublicNav } from "./components/PublicNav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ZigZag - Registro de Ventas",
-  description: "Sistema de registro de ventas y encargos para ZigZag",
+  title: "ZigZag",
+  description: "Stock disponible de ZigZag",
 };
 
 export default function RootLayout({
@@ -28,7 +28,6 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Nav />
         {children}
       </body>
     </html>

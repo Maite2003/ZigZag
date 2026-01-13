@@ -3,22 +3,59 @@
 import { DataConfigType } from "@/types/config"
 import { useState } from "react";
 import { Formik, Field, Form, ErrorMessage, } from 'formik';
-import { stockSchema } from "@/types/stock";
+import { simpleStockSchema } from "@/types/basicStock";
 import axios from "axios";
+import { uploadImage } from "@/services/cloudinaryService";
 
 
 export function CreateStockForm({ config }: { config: DataConfigType }) {
   const [dataConfig, setDataConfig] = useState<DataConfigType>(config);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const newFile = e.target.files[0];
+      if (selectedFiles.length >= 2) {
+        alert("Solo puedes subir un máximo de 2 fotos.");
+        return;
+      }
+      setSelectedFiles([...selectedFiles, newFile]);
+    }
+    e.target.value = "";
+  };
+
+  const removeFile = (index: number) => {
+    const newFiles = selectedFiles.filter((_, i) => i !== index);
+    setSelectedFiles(newFiles);
+  };
+
   const handleAddStock = async (values: any, { resetForm }: any) => {
     setIsLoading(true);
     try {
-      await axios.post('/api/stock', values);
+
+      // CLOUDINARY
+
+      let imageUrls: string[] = [];
+
+      if (selectedFiles.length > 0) {
+        setMessage({ type: 'success', text: `Subiendo ${selectedFiles.length} fotos...` });
+        imageUrls = await Promise.all(selectedFiles.map(file => uploadImage(file)));
+      }
+
+      const finalData = {
+        ...values,
+        photos: imageUrls
+      }
+
+      // N8N
+
+      await axios.post('/api/stock', finalData);
 
       setMessage({ type: 'success', text: 'Producto agregado al stock exitosamente' })
-      resetForm()
+      resetForm();
+      setSelectedFiles([]);
       setTimeout(() => setMessage(null), 3000)
     } catch (error) {
       setMessage({ type: 'error', text: 'Error al agregar el producto' })
@@ -54,7 +91,7 @@ export function CreateStockForm({ config }: { config: DataConfigType }) {
             fabric: '',
             timestamp: new Date().toISOString().split('T')[0]
           }}
-          validationSchema={stockSchema}
+          validationSchema={simpleStockSchema}
           onSubmit={handleAddStock}
         >
           {({ isValid, dirty }) => {
@@ -68,7 +105,7 @@ export function CreateStockForm({ config }: { config: DataConfigType }) {
                     className="w-full p-2 border-2 rounded-md bg-white"
                     style={{ borderColor: '#fa9b71', color: '#616d48' }}
                   >
-                    <option value="">-- Seleccionar Modelo --</option>
+                    <option value="" disabled hidden>-- Seleccionar Modelo --</option>
                     {dataConfig.models.map(m => (
                       <option key={m} value={m}>{m}</option>
                     ))}
@@ -84,7 +121,7 @@ export function CreateStockForm({ config }: { config: DataConfigType }) {
                     className="w-full p-2 border-2 rounded-md bg-white"
                     style={{ borderColor: '#fa9b71', color: '#616d48' }}
                   >
-                    <option value="">-- Seleccionar Tela --</option>
+                    <option value="" disabled hidden>-- Seleccionar Tela --</option>
                     {dataConfig.fabrics.map(f => (
                       <option key={f} value={f}>{f}</option>
                     ))}
@@ -98,11 +135,49 @@ export function CreateStockForm({ config }: { config: DataConfigType }) {
                 <ErrorMessage name="timestamp" component="div" className="text-xs mt-1" />
               </div>
 
+              <div className="border-2 border-dashed rounded-xl p-4" style={{ borderColor: '#fa9b71', backgroundColor: '#fff' }}>
+                  <label className="block text-sm font-semibold mb-2" style={{ color: '#616d48' }}>
+                    Fotos del Producto ({selectedFiles.length}/2)
+                  </label>
+                  
+                  {selectedFiles.length < 2 && (
+                    <input 
+                      type="file" 
+                      accept="image/*"
+                      onChange={handleFileChange}
+                      className="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100 cursor-pointer"
+                    />
+                  )}
+
+                  {selectedFiles.length > 0 && (
+                    <div className="flex gap-4 mt-3">
+                      {selectedFiles.map((file, index) => (
+                        <div key={index} className="relative group">
+                          <div className="w-20 h-20 rounded-lg overflow-hidden border border-gray-300 shadow-sm">
+                            <img 
+                              src={URL.createObjectURL(file)} 
+                              alt="preview" 
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => removeFile(index)}
+                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow-md hover:bg-red-600 transition-colors"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
                 <button 
                   type="submit" 
-                  disabled={!isValid || !dirty || isLoading}
+                  disabled={!isValid || !dirty || isLoading || selectedFiles.length == 0}
                   className="w-full text-white font-bold py-3 rounded-xl transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed" 
-                  style={{ backgroundColor: !isValid ? '#999999' : '#616d48', cursor: (!isValid || !dirty || isLoading) ? 'not-allowed' : 'pointer' }} 
+                  style={{ backgroundColor: '#616d48', cursor: (!isValid || !dirty || isLoading || selectedFiles.length == 0) ? 'not-allowed' : 'pointer' }} 
                   onMouseEnter={(e) => { 
                     if (isValid) {
                       (e.currentTarget as any).style.backgroundColor = '#fa9b71'; 

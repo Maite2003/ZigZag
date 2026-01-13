@@ -159,20 +159,44 @@ export function SaleForm({ config } : { config: DataConfigType}) {
                         <option key={item.id} value={item.id}>{item.model} | {item.fabric}</option>
                       ))}
                     </Field>
+                    {values.stockId && (
+                      (() => {
+                        const selected = dataConfig.stock.find((i: any) => i.id === values.stockId);
+                        let photoUrl = '/placeholder.png';
+                        if (selected?.photos) {
+                          photoUrl = selected.photos[0];
+                        }
+
+                        return selected ? (
+                          <div className="mt-3 p-3 border rounded-xl flex items-center gap-4 animate-fadeIn" style={{background: "#fff5f0", borderColor: "#fa9b71"}}>
+                            <img 
+                              src={photoUrl} 
+                              alt="Vista previa" 
+                              className="w-16 h-16 rounded-lg object-cover border shadow-sm"
+                              style={{borderColor: "#fa9b71"}}
+                            />
+                            <div>
+                              <p className="text-sm font-bold text-gray-700" style={{color: "#fa9b71"}}>Has seleccionado:</p>
+                              <p className="text-xs" style={{color: "#616d48"}}>{selected.model} - {selected.fabric}</p>
+                            </div>
+                          </div>
+                        ) : null;
+                      })()
+                    )}
                   </div>
                 ) : (
                   <div className="flex gap-2">
                     <div className="flex-1">
                       <label className="block text-sm font-semibold mb-1" style={{ color: '#616d48' }}>Modelo</label>
                       <Field as="select" name="model" className="w-full p-2 border-2 rounded-md bg-white" style={{ borderColor: '#fa9b71', color: '#616d48' }}>
-                        <option value="">-- Modelo --</option>
+                        <option value="" disabled hidden>-- Modelo --</option>
                         {dataConfig.models.map(m => <option key={m} value={m}>{m}</option>)}
                       </Field>
                     </div>
                     <div className="flex-1">
                       <label className="block text-sm font-semibold mb-1" style={{ color: '#616d48' }}>Tela</label>
                       <Field as="select" name="fabric" className="w-full p-2 border-2 rounded-md bg-white" style={{ borderColor: '#fa9b71', color: '#616d48' }}>
-                        <option value="">-- Tela --</option>
+                        <option value="" disabled hidden>-- Tela --</option>
                         {dataConfig.fabrics.map(t => <option key={t} value={t}>{t}</option>)}
                       </Field>
                     </div>

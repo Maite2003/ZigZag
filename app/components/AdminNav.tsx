@@ -3,15 +3,16 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-export function Nav() {
+export function AdminNav() {
   const pathname = usePathname()
 
   const isActive = (path: string) => pathname === path
 
   const navItems = [
-    { href: '/', label: 'Ventas' },
-    { href: '/update-status', label: 'Pagos' },
-    { href: '/add-stock', label: 'Stock' },
+    { href: '/admin/add-sale', label: 'Ventas' },
+    { href: '/admin/update-status', label: 'Pagos' },
+    { href: '/admin/add-stock', label: 'Stock' },
+    { href: '/', label: 'Inicio' }
   ]
 
   return (

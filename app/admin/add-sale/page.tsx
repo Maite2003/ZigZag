@@ -1,5 +1,5 @@
+import { SaleForm } from "@/app/components/SaleForm";
 import { getConfig } from "@/services/n8nService";
-import { SaleForm } from "./components/saleForm";
 import { DataConfigType } from "@/types/config";
 
 export const dynamic = 'force-dynamic';

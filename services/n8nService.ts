@@ -1,7 +1,7 @@
 import { DataConfigType } from '@/types/config';
 import { PendingSale } from '@/types/pendingSales';
 import { Sale } from '@/types/sales';
-import { Stock } from '@/types/stock';
+import { SimpleStock } from '@/types/basicStock';
 import axios from 'axios';
 
 const BASE_URL = process.env.N8N_BASE_URL;
@@ -12,6 +12,10 @@ const URLS = {
   POST_SALE: `${BASE_URL }/webhook/d6d05ef7-a4a2-49b4-9474-e575724bb4aa`,
   POST_STOCK: `${BASE_URL}/webhook/dd8babcc-9854-4f03-81c7-74059adc7503`,
 }
+const headers = {
+  'Content-Type': 'application/json',
+  'x-api-key': process.env.N8N_API_KEY
+}
 
 export async function getConfig() {
   const req = await axios.get(URLS.GET_CONFIG);
@@ -21,7 +25,7 @@ export async function getConfig() {
   const config: DataConfigType = req.data;
   const rawPrices = config.pricePerModel || {};
   const modelsList = [...Object.keys(rawPrices), "Otro"];
-  config["models"] = modelsList;
+  config["models"] = modelsList.sort();
   return config;
 }
 
@@ -29,7 +33,7 @@ export async function postSale(payload:Sale) {
   if (!payload) {
     throw new Error('No se puede registrar una venta vacia')
   }
-  const req = await axios.post(URLS.POST_SALE, payload);
+  const req = await axios.post(URLS.POST_SALE, payload, {headers});
   if (req.status !== 200) {
     throw new Error('Error creando la nueva venta');
   }
@@ -49,18 +53,18 @@ export async function updateSale(sale: PendingSale) {
   if (!sale) {
     throw new Error('Se debe seleccionar una venta para actualizar');
   }
-  const req = await axios.put(URLS.UPDATE_SALE, sale);
+  const req = await axios.put(URLS.UPDATE_SALE, sale, {headers});
   if (req.status !== 200) {
     throw new Error('Error con /sales/pendings');
   }
   return req.data;
 }
 
-export async function postStock(stock: Stock) {
+export async function postStock(stock: SimpleStock) {
   if (!stock) {
     throw new Error('No se puede registrar un producto vacio');
   }
-  const req = await axios.post(URLS.POST_STOCK, stock);
+  const req = await axios.post(URLS.POST_STOCK, stock, {headers});
   if (req.status !== 200) {
     throw new Error('Error creando el nuevo producto');
   }

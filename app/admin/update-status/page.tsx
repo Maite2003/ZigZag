@@ -1,6 +1,6 @@
-import { UpdateSaleForm } from '../components/updateSaleForm'
 import { PendingSale } from '@/types/pendingSales';
 import { getPendings } from '@/services/n8nService';
+import { UpdateSaleForm } from '@/app/components/UpdateSaleForm';
 
 export const dynamic = 'force-dynamic';
 
