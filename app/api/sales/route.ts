@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { postSale } from "@/services/n8nService";
 import { getServerSession } from "next-auth";
 import { saleSchema } from "@/types/sales";
+import { deleteImages } from "@/services/cloudinaryService";
 
 export async function POST(
   request: Request,
@@ -23,6 +24,11 @@ export async function POST(
     await saleSchema.validate(sale, { abortEarly: false });
 
     const newSale = await postSale(sale);
+    
+    if (sale.isStock) {
+      await deleteImages(sale.photos);
+    }
+
 
     return NextResponse.json({ sale: newSale }, { status: 201 });
   } catch(error:any) {

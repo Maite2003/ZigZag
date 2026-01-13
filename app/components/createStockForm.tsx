@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Formik, Field, Form, ErrorMessage, } from 'formik';
 import { simpleStockSchema } from "@/types/basicStock";
 import axios from "axios";
-import { uploadImage } from "@/services/cloudinaryService";
+import { uploadImage } from "@/services/uploadCloudinaryService";
 
 
 export function CreateStockForm({ config }: { config: DataConfigType }) {

@@ -29,18 +29,20 @@ export function SaleForm({ config } : { config: DataConfigType}) {
   const handleOnSubmit = async (values: any, { resetForm }: any) => {
     setIsLoading(true);
     try {
+      const photosURL = values.isStock
+          ? dataConfig?.stock.find((i: { id: string; }) => i.id === values.stockId)?.photos
+          : []
+
       const payload = {
         ...values,
-        productLabel: values.isStock 
-          ? dataConfig?.stock.find((i: { id: string; }) => i.id === values.model)?.model 
-          : `${values.model} (${values.fabric})`,
-        month: new Date().toLocaleString('es-ES', { month: 'long' })
+        month: new Date().toLocaleString('es-ES', { month: 'long' }),
+        photos: photosURL
       };
 
       await postSale(payload);
       
       if (values.isStock) {
-        dataConfig!.stock = dataConfig!.stock.filter((item) => item.id !== values.id)
+        dataConfig!.stock = dataConfig!.stock.filter((item) => item.id !== values.stockId)
       }
 
       resetForm();
