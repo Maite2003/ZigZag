@@ -1,4 +1,12 @@
+'use client';
+
 import { Product } from '../../types/config'
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, A11y } from 'swiper/modules';
+import Image from 'next/image';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 interface ProductCardProps {
   product: Product;
@@ -6,8 +14,8 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, price }: ProductCardProps) {
-  const photoArray = product.photos || [];
-  const mainPhoto = photoArray.length > 0 && photoArray[0].trim() !== '' ? photoArray[0].trim() : "/placeholder.png";
+  const photoArray = (product.photos || []).filter((p: string) => p?.trim?.());
+  const mainPhoto = photoArray.length > 0 ? photoArray[0].trim() : "/placeholder.png";
 
   const phone = "5492236320397"; 
   const message = `Hola! Me interesa el producto ${product.model} - ${product.fabric}...`;
@@ -17,16 +25,62 @@ export function ProductCard({ product, price }: ProductCardProps) {
     <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all border border-orange-100 flex flex-col h-full group">
       
       <div className="relative aspect-4/5 w-full bg-gray-100 overflow-hidden">
-        <img 
-          src={mainPhoto} 
-          alt={product.model}
-          className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
-        />
-        
-        {photoArray.length > 1 && (
-          <div className="absolute bottom-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded-full">
-            + {photoArray.length - 1} fotos
-          </div>
+        {photoArray.length > 0 ? (
+          <Swiper
+            modules={[Navigation, Pagination, A11y]}
+            navigation={{
+              nextEl: '.swiper-button-next-custom',
+              prevEl: '.swiper-button-prev-custom',
+            }}
+            pagination={{ 
+              clickable: true,
+              dynamicBullets: true,
+            }}
+            spaceBetween={0}
+            slidesPerView={1}
+            loop={photoArray.length > 1}
+            simulateTouch={true}
+            grabCursor={true}
+            className="w-full h-full"
+          >
+            {photoArray.map((photo, idx) => (
+              <SwiperSlide key={idx} className="flex items-center justify-center bg-gray-100">
+                <img
+                  src={photo.trim()}
+                  alt={`${product.model} - foto ${idx + 1}`}
+                  className="w-full h-full object-cover"
+                  loading={idx === 0 ? 'eager' : 'lazy'}
+                />
+              </SwiperSlide>
+            ))}
+
+            {photoArray.length > 1 && (
+              <>
+                <button
+                  className="swiper-button-prev-custom absolute left-2 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white rounded-full p-2 transition z-10 w-8 h-8 flex items-center justify-center"
+                  aria-label="Foto anterior"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button
+                  className="swiper-button-next-custom absolute right-2 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white rounded-full p-2 transition z-10 w-8 h-8 flex items-center justify-center"
+                  aria-label="Siguiente foto"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </>
+            )}
+          </Swiper>
+        ) : (
+          <img
+            src={mainPhoto}
+            alt={product.model}
+            className="w-full h-full object-cover"
+          />
         )}
       </div>
 
