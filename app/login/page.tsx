@@ -26,7 +26,7 @@ export default function LoginPage() {
       setError('Credenciales incorrectas');
     } else {
       setIsLoading(false);
-      router.push('/admin');
+      router.push('/admin/add-sale');
       router.refresh();
     }
   };
