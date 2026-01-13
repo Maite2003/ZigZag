@@ -19,7 +19,7 @@ export default async function Page() {
   }
 
   return (
-      <main className="w-full py-8 px-6 sm:py-12 sm:px-8" style={{ backgroundColor: '#fff5f0', marginTop:'15vh' }}>
+      <main className="w-full py-8 px-6 sm:py-12 sm:px-8" style={{ backgroundColor: '#fff5f0'}}>
         <h1 className="text-3xl font-bold mb-2" style={{ color: '#616d48' }}>Nuestros Productos</h1>
         <p className="mb-8" style={{ color: '#fa9b71' }}>Explora nuestra colección de artículos exclusivos</p>
         

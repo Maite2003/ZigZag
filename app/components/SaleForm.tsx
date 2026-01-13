@@ -58,8 +58,7 @@ export function SaleForm({ config } : { config: DataConfigType}) {
   }   
 
   return (
-    
-    <div className="max-w-lg mx-auto m-8 p-6 rounded-2xl shadow-xl border-2" style={{ backgroundColor: '#fff5f0', borderColor: '#fa9b71' }}>
+    <div className="max-w-lg mx-auto p-6 rounded-2xl shadow-xl border-2" style={{ backgroundColor: '#fff5f0', borderColor: '#fa9b71' }}>
       <header className="mb-6">
         <h1 className="text-3xl font-bold" style={{ color: '#616d48' }}>ZigZag</h1>
         <p className="text-sm" style={{ color: '#fa9b71' }}>Registro de ventas y encargos</p>

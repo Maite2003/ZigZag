@@ -16,7 +16,7 @@ export function AdminNav() {
   ]
 
   return (
-    <nav className="fixed top-0 left-0 right-0 w-full z-50 backdrop-blur-md" style={{ backgroundColor: 'rgba(97, 109, 72, 0.95)', borderBottom: '1px solid rgba(250, 155, 113, 0.3)' }}>
+    <nav className="sticky top-0 left-0 right-0 w-full z-50 backdrop-blur-md" style={{ backgroundColor: 'rgba(97, 109, 72, 0.95)', borderBottom: '1px solid rgba(250, 155, 113, 0.3)' }}>
       <div className="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 transition-opacity hover:opacity-80">
           <img src="/logo_text.png" alt="ZigZag" className="h-12 w-auto" />
