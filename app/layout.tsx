@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { PublicNav } from "./components/PublicNav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "ZigZag",
-  description: "Stock disponible de ZigZag",
+  description: "Pagina web de ZigZag",
 };
 
 export default function RootLayout({
