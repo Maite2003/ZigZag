@@ -5,18 +5,25 @@
       "parameters": {
         "httpMethod": "POST",
         "path": "dd8babcc-9854-4f03-81c7-74059adc7503",
+        "authentication": "headerAuth",
         "responseMode": "responseNode",
         "options": {}
       },
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        0,
+        -80,
         0
       ],
       "id": "fcf510f2-141d-43ae-b094-79ca9208dcf9",
       "name": "Webhook",
-      "webhookId": "dd8babcc-9854-4f03-81c7-74059adc7503"
+      "webhookId": "dd8babcc-9854-4f03-81c7-74059adc7503",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "9LgxdCvMWtjwbk3Y",
+          "name": "Header Auth account"
+        }
+      }
     },
     {
       "parameters": {
@@ -134,22 +141,13 @@
             "Producto": "={{ $('Webhook').item.json.body.model }}",
             "Hecho": "={{ $('Webhook').item.json.body.timestamp.toDateTime().format('dd/MM/yyyy') }}",
             "Tela": "={{ $('Webhook').item.json.body.fabric }}",
-            "row_number": "={{ $json.row_number }}"
+            "row_number": "={{ $json.row_number }}",
+            "Fotos": "={{ $('Webhook').item.json.body.photos.join(',') }}"
           },
           "matchingColumns": [
             "row_number"
           ],
           "schema": [
-            {
-              "id": "#",
-              "displayName": "#",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
-            },
             {
               "id": "Producto",
               "displayName": "Producto",
@@ -187,15 +185,6 @@
               "canBeUsedToMatch": true
             },
             {
-              "id": "nube",
-              "displayName": "nube",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
               "id": "ML",
               "displayName": "ML",
               "required": false,
@@ -203,6 +192,16 @@
               "display": true,
               "type": "string",
               "canBeUsedToMatch": true
+            },
+            {
+              "id": "Fotos",
+              "displayName": "Fotos",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
             },
             {
               "id": "row_number",
@@ -300,7 +299,7 @@
     "executionOrder": "v1",
     "availableInMCP": false
   },
-  "versionId": "0955b028-61db-4dfc-b868-c4306ec5082a",
+  "versionId": "503118e2-3931-4d37-8dc0-4776bd3d02dc",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "090f2a0f1b98b928f216e93c73225715993b9308f79f014801ecbcdcf413cefd"

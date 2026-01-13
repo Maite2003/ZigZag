@@ -164,7 +164,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const prices = $('PricePerModel').all();\n\nconst prices_entries = prices\n  .filter(item => item.json.name) // Only keep the ones that are not empty\n  .map(item => [item.json.name, item.json.price]); \n\nconst pricePerModel = Object.fromEntries(prices_entries);\n\nconst fabrics = $('Fabrics').first().json.Telas;\n\nconst stockAvailable = $('Stock').all();\n\nconst stock = stockAvailable\n  .map(item => ({'id': item.json.id, \n                'model': item.json.model, \n                'fabric': item.json.fabric})\n  ); \n\n//const stock = Object.fromEntries(stock_entries);\n\nreturn [\n  {\n    json: {\n      pricePerModel: pricePerModel,\n      fabrics: fabrics,\n      stock: stock\n    }\n  }\n];"
+        "jsCode": "const prices = $('PricePerModel').all();\n\nconst prices_entries = prices\n  .filter(item => item.json.name) // Only keep the ones that are not empty\n  .map(item => [item.json.name, item.json.price]); \n\nconst pricePerModel = Object.fromEntries(prices_entries);\n\nconst fabrics = $('Fabrics').first().json.Telas.sort();\n\nconst stockAvailable = $('Stock').all().sort();\n\nconst stock = stockAvailable\n  .map(item => ({'id': item.json.id, \n                'model': item.json.model, \n                'fabric': item.json.fabric,\n                'photos': item.json.photos.split(',')})\n  ); \n\n//const stock = Object.fromEntries(stock_entries);\n\nreturn [\n  {\n    json: {\n      pricePerModel: pricePerModel,\n      fabrics: fabrics,\n      stock: stock\n    }\n  }\n];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -370,6 +370,12 @@
               "name": "id",
               "value": "={{ $json.row_number }}",
               "type": "string"
+            },
+            {
+              "id": "1a02492b-70d7-4d63-9e44-7068cfce25aa",
+              "name": "photos",
+              "value": "={{ $json.Fotos }}",
+              "type": "string"
             }
           ]
         },
@@ -527,7 +533,7 @@
     "executionOrder": "v1",
     "availableInMCP": false
   },
-  "versionId": "268b79c7-dd3d-4082-af7b-b8c567a2ae69",
+  "versionId": "4096c9d7-7fa5-4168-bb0c-947ffd908f3f",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "090f2a0f1b98b928f216e93c73225715993b9308f79f014801ecbcdcf413cefd"

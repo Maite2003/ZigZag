@@ -5,6 +5,7 @@
       "parameters": {
         "httpMethod": "PUT",
         "path": "6c10d42d-9225-4c3f-ad62-210fc7933f20",
+        "authentication": "headerAuth",
         "responseMode": "responseNode",
         "options": {}
       },
@@ -16,7 +17,13 @@
       ],
       "id": "e9bee884-cdb2-49cb-b9d8-0f55f5c10924",
       "name": "Webhook",
-      "webhookId": "6c10d42d-9225-4c3f-ad62-210fc7933f20"
+      "webhookId": "6c10d42d-9225-4c3f-ad62-210fc7933f20",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "9LgxdCvMWtjwbk3Y",
+          "name": "Header Auth account"
+        }
+      }
     },
     {
       "parameters": {
@@ -398,7 +405,7 @@
     "executionOrder": "v1",
     "availableInMCP": false
   },
-  "versionId": "a98c42cd-dac7-47fe-aa23-0100de0b7d48",
+  "versionId": "83de7e65-454a-483f-b75d-78da544e4645",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "090f2a0f1b98b928f216e93c73225715993b9308f79f014801ecbcdcf413cefd"
