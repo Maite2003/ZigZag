@@ -29,7 +29,7 @@ To accommodate the client's existing workflow, I implemented a Headless Architec
 1. **Frontend (Next.js 14):** Provides the UI/UX for both the public catalog and private admin dashboard. Hosted on Vercel.
 2. **Authentication:** NextAuth.js handles session management and route protection.
 3. **Media Storage (Cloudinary):** Handles image hosting and optimization. Google Sheets only stores the image URLs, keeping the spreadsheet lightweight.
-4. **Orchestrator (n8n on AWS):** Manages business logic (webhooks, validation, and appending data to Sheets).
+4. **Orchestrator (n8n on Oracle Cloud):** Manages business logic (webhooks, validation, and appending data to Sheets). Hosted on an Oracle Cloud Compute Instance (Always Free Tier).
 5. **Database (Google Sheets):** Acts as the persistent storage layer for text-based data.
 
 # Tech Stack
@@ -44,7 +44,7 @@ To accommodate the client's existing workflow, I implemented a Headless Architec
 ## Backend & Infrastructure
 - n8n (Self-hosted workflow automation)
 - Docker
-- AWS EC2 (Hosting the n8n instance)
+- Oracle Cloud Infrastructure (Hosting the n8n instance)
 
 ```mermaid
 graph LR
@@ -57,7 +57,7 @@ graph LR
         API[🛡️ API Routes / Proxy]
     end
 
-    subgraph AWS [☁️ AWS EC2]
+    subgraph Oracle [☁️ Oracle Cloud]
         Docker[🐳 Docker Container]
         n8n[⚡ n8n Orchestrator]
     end
@@ -78,9 +78,9 @@ graph LR
 
     style Client fill:#fff,stroke:#333,stroke-width:2px
     style Vercel fill:#000,stroke:#fff,stroke-width:2px,color:#fff
-    style AWS fill:#FF9900,stroke:#232F3E,stroke-width:2px,color:#fff
+    style Oracle fill:#C74634,stroke:#312D2A,stroke-width:2px,color:#fff
     style Google fill:#34A853,stroke:#fff,stroke-width:2px,color:#fff
-    ```
+```
 
 # Local Setup
 Create a `.env.local` file with the following variables:

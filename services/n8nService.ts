@@ -18,7 +18,7 @@ const headers = {
 }
 
 export async function getConfig() {
-  const req = await axios.get(URLS.GET_CONFIG);
+  const req = await axios.get(URLS.GET_CONFIG, { headers });
   if (req.status !== 200 || !req.data) {
     throw new Error('Error con la api /config');
   }
@@ -33,7 +33,7 @@ export async function postSale(payload:Sale) {
   if (!payload) {
     throw new Error('No se puede registrar una venta vacia')
   }
-  const req = await axios.post(URLS.POST_SALE, payload, {headers});
+  const req = await axios.post(URLS.POST_SALE, payload, { headers });
   if (req.status !== 200) {
     throw new Error('Error creando la nueva venta');
   }
@@ -41,7 +41,7 @@ export async function postSale(payload:Sale) {
 }
 
 export async function getPendings() {
-  const req = await axios.get(URLS.GET_PENDINGS);
+  const req = await axios.get(URLS.GET_PENDINGS, { headers });
   if (req.status !== 200) {
     throw new Error('Error con la api /pendings');
   }
