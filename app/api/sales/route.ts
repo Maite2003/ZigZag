@@ -21,8 +21,16 @@ export async function POST(
       return NextResponse.json({error: "Falta payload"}, { status: 400 });
     }
 
-    await saleSchema.validate(sale, { abortEarly: false });
+    if (sale.price && typeof sale.price === 'string') {
+      sale.price = parseFloat(sale.price);
+    }
 
+    try {
+      await saleSchema.validate(sale, { abortEarly: false });
+    } catch (validationError: any) {
+      console.log('Error de validacion:', validationError.errors);
+      throw validationError;
+    }
     const newSale = await postSale(sale);
     
     if (sale.isStock) {

@@ -15,7 +15,7 @@ export interface Sale {
 }
 
 export const saleSchema = Yup.object().shape({
-  id: Yup.string().optional(),
+  stockId: Yup.string().optional(),
 
   timestamp: Yup.string()
     .required('La fecha es obligatoria'),
@@ -40,11 +40,14 @@ export const saleSchema = Yup.object().shape({
     .required('El estado de pago es obligatorio'),
 
   paymentMethod: Yup.string()
-    .oneOf(['EFECTIVO', 'TRANSFERENCIA'])
     .when('status', {
       is: (status: string) => status === 'PAGO',
-      then: (schema) => schema.required('Selecciona cómo pagó'),
-      otherwise: (schema) => schema.optional(),
+      then: (schema) => schema
+        .oneOf(['EFECTIVO', 'TRANSFERENCIA'])
+        .required('Selecciona cómo pagó'),
+      otherwise: (schema) => schema
+        .oneOf([''])
+        .optional(),
     }),
 
   notes: Yup.string()

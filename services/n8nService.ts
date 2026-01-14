@@ -3,6 +3,7 @@ import { PendingSale } from '@/types/pendingSales';
 import { Sale } from '@/types/sales';
 import { SimpleStock } from '@/types/basicStock';
 import axios from 'axios';
+import { revalidateTag } from 'next/cache';
 
 const BASE_URL = process.env.N8N_BASE_URL;
 const URLS = {
@@ -14,15 +15,22 @@ const URLS = {
 }
 const headers = {
   'Content-Type': 'application/json',
-  'x-api-key': process.env.N8N_API_KEY
+  'x-api-key': process.env.N8N_API_KEY || ''
 }
 
 export async function getConfig() {
-  const req = await axios.get(URLS.GET_CONFIG, { headers });
-  if (req.status !== 200 || !req.data) {
-    throw new Error('Error con la api /config');
+  const res = await fetch(URLS.GET_CONFIG, {
+    headers,
+    next: { 
+      revalidate: 3600,
+      tags: ['config']
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error(`Error con la api /config: ${res.status}`);
   }
-  const config: DataConfigType = req.data;
+  const config: DataConfigType = await res.json();
   const rawPrices = config.pricePerModel || {};
   const modelsList = [...Object.keys(rawPrices), "Otro"];
   config["models"] = modelsList.sort();
@@ -41,11 +49,17 @@ export async function postSale(payload:Sale) {
 }
 
 export async function getPendings() {
-  const req = await axios.get(URLS.GET_PENDINGS, { headers });
-  if (req.status !== 200) {
+  const res = await fetch(URLS.GET_PENDINGS, {
+    headers,
+    next: {
+      revalidate: 3600,
+      tags: ['pendings']
+    },
+  });
+  if (!res.ok) {
     throw new Error('Error con la api /pendings');
   }
-  const pendings: PendingSale[] = req.data.pendings;
+  const pendings: PendingSale[] = (await res.json()).pendings;
   return pendings;
 }
 
@@ -69,4 +83,13 @@ export async function postStock(stock: SimpleStock) {
     throw new Error('Error creando el nuevo producto');
   }
   return req.data;
+}
+
+
+export async function updateConfig() {
+  revalidateTag('config', 'default');
+}
+
+export async function updatePendings() {
+  revalidateTag('pendings', 'default');
 }
